@@ -36,6 +36,8 @@ Send a POST request to /query with this JSON body:
 {
   "query": "Is an insurance company liable to pay compensation if a transport vehicle involved in an accident was being used without a valid permit?"
 }
+
+
  Sample Response
 {
   "answer": "No, the insurance company is not liable to pay compensation if the transport vehicle lacked a valid permit at the time of the accident.\n\n- **Reason**: Use of a vehicle in a public place without a permit constitutes a \"fundamental statutory infraction\" under the Motor Vehicles Act, 1988. This breach is distinct from cases involving driver license violations (e.g., fake license, wrong vehicle class). The insurer is exempt from liability and entitled to recover any compensation paid from the owner and driver.\n  **Source**: Context document stating, *\"Use of vehicle in public place without permit is fundamental statutory infraction... Onus not to be casted on insurer - Insurer entitled to recover the compensation from the owner and the driver.\"*",
