@@ -1,0 +1,16 @@
+__pycache__/
+*.pt
+*.bin
+*.npy
+*.cache/
+*.pkl
+*.log
+*.tmp
+*.zip
+*.tar.gz
+data/
+models/
+output/
+.env
+venv/
+.venv/
