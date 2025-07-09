@@ -35,7 +35,7 @@ Answer:"""
                 {"role": "user", "content": prompt}
             ],
             temperature=0.5,
-            max_tokens=512,
+            max_tokens=1024,
             extra_headers={
                 "HTTP-Referer": "https://ragbackend.com",  # optional
                 "X-Title": "Legal RAG System"  # optional
