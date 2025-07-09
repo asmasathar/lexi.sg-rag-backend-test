@@ -56,3 +56,6 @@ Send a POST request to /query with this JSON body:
     }
   ]
 }
+
+![image](https://github.com/user-attachments/assets/3de27b15-d320-4095-ac85-f6ec68cc8699)
+
