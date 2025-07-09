@@ -6,7 +6,7 @@ class RAGPipeline:
         self.vectorstore = vectorstore
         self.client = OpenAI(
             base_url="https://openrouter.ai/api/v1",
-            api_key="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"  # <-- paste your API key here
+            api_key="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"  
         )
 
     def format_prompt(self, context, query):
