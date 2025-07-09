@@ -3,7 +3,8 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.responses import RedirectResponse
 from contextlib import asynccontextmanager
-
+import nltk
+nltk.data.path.append("/tmp/nltk_data")
 from app.document_loader import load_documents
 from app.vector_store import VectorStore
 from app.rag import RAGPipeline

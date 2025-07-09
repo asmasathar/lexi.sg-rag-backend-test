@@ -1,0 +1,1 @@
+buildCommand: "python -c \"import nltk; nltk.download('punkt', download_dir='/tmp/nltk_data')\" && pip install -r requirements.txt"
