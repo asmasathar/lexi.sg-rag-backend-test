@@ -6,49 +6,37 @@ This is a Retrieval-Augmented Generation (RAG) based legal assistant that uses O
 
 ##  Quick Start
 
+Try it out using this public URL: https://ecfe20a46f27.ngrok-free.app/docs
+
+OR
+
 ### 1. **Fork and Clone the Repository**
 
-```bash
 git clone https://github.com/<your-username>/lexi.sg-rag-backend-test.git
 cd lexi.sg-rag-backend-test
 2. Create and Activate Virtual Environment
-bash
-Copy
-Edit
 python -m venv venv
 # For Windows:
 venv\Scripts\activate
-# For macOS/Linux:
-source venv/bin/activate
+
 3. Install Dependencies
-bash
-Copy
-Edit
 pip install -r requirements.txt
-4. Run the Server
-bash
-Copy
-Edit
+
+5. Run the Server
 uvicorn app.main:app --reload
 This will start the FastAPI backend at:
-👉 http://127.0.0.1:8000
+ http://127.0.0.1:8000
 
 To interact with the API using Swagger UI, visit:
-👉 http://127.0.0.1:8000/docs
+ http://127.0.0.1:8000/docs
 
-🧠 Sample Query
+ Sample Query
 Send a POST request to /query with this JSON body:
 
-json
-Copy
-Edit
 {
   "query": "Is an insurance company liable to pay compensation if a transport vehicle involved in an accident was being used without a valid permit?"
 }
-✅ Sample Response
-json
-Copy
-Edit
+ Sample Response
 {
   "answer": "No, the insurance company is not liable to pay compensation if the transport vehicle lacked a valid permit at the time of the accident.\n\n- **Reason**: Use of a vehicle in a public place without a permit constitutes a \"fundamental statutory infraction\" under the Motor Vehicles Act, 1988. This breach is distinct from cases involving driver license violations (e.g., fake license, wrong vehicle class). The insurer is exempt from liability and entitled to recover any compensation paid from the owner and driver.\n  **Source**: Context document stating, *\"Use of vehicle in public place without permit is fundamental statutory infraction... Onus not to be casted on insurer - Insurer entitled to recover the compensation from the owner and the driver.\"*",
   "citations": [
