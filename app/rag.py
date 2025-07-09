@@ -1,49 +1,55 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
-import torch
+from openai import OpenAI
+import re
 
 class RAGPipeline:
-    def __init__(self, vector_store):
-        self.vector_store = vector_store
-        self.tokenizer = AutoTokenizer.from_pretrained("distilgpt2")
-        self.model = AutoModelForCausalLM.from_pretrained("distilgpt2")
+    def __init__(self, vectorstore):
+        self.vectorstore = vectorstore
+        self.client = OpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            api_key="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"  # <-- paste your API key here
+        )
+
+    def format_prompt(self, context, query):
+        return f"""
+You are a legal assistant. Use only the following legal documents to answer the question. Do not use outside knowledge. Be concise, accurate, and cite the source below each point if relevant.
+
+Context:
+{context}
+
+Question: {query}
+
+Answer:"""
+
+    def clean_answer(self, text):
+        return re.sub(r'(\b.+?\b)(?: \1\b)+', r'\1', text).strip()
 
     def run(self, query):
-        # Step 1: Retrieve top matching documents
-        docs = self.vector_store.query(query, top_k=3)
+        top_docs = self.vectorstore.query(query)
+        context = "\n---\n".join([doc["text"] for doc in top_docs])
+        prompt = self.format_prompt(context, query)
 
-        # Step 2: Create a single context string
-        context = "\n\n".join([doc["text"] for doc in docs])
-        full_prompt = (
-            f"Context:\n{context}\n\n"
-            f"Question: {query}\n"
-            f"Answer:"
+        response = self.client.chat.completions.create(
+            model="tngtech/deepseek-r1t2-chimera:free",
+            messages=[
+                {"role": "system", "content": "You are a legal document QA assistant."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.5,
+            max_tokens=512,
+            extra_headers={
+                "HTTP-Referer": "https://ragbackend.com",  # optional
+                "X-Title": "Legal RAG System"  # optional
+            }
         )
 
-        # Step 3: Generate an answer from the language model
-        inputs = self.tokenizer(full_prompt, return_tensors="pt")
-        outputs = self.model.generate(
-            **inputs,
-            max_new_tokens=200,
-            temperature=0.7,
-            pad_token_id=self.tokenizer.eos_token_id
-        )
-        decoded = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
-
-        # Step 4: Extract only the answer
-        answer = decoded.split("Answer:")[-1].strip()
-
-        # Step 5: Create citations in the proper format
-        citations = []
-        for doc in docs:
-            citation_text = doc["text"].strip()
-            if len(citation_text) > 300:
-                citation_text = citation_text[:300].strip() + "..."
-            citations.append({
-                "text": citation_text,
-                "source": doc["source"]
-            })
+        answer = response.choices[0].message.content.strip()
 
         return {
-            "answer": answer,
-            "citations": citations
+            "answer": self.clean_answer(answer),
+            "citations": [
+                {
+                    "text": doc["text"],
+                    "source": doc["source"]
+                } for doc in top_docs
+            ]
         }

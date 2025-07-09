@@ -6,3 +6,5 @@ fastapi
 numpy
 python-docx
 PyPDF2
+nltk
+openai
