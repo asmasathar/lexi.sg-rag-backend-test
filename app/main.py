@@ -9,7 +9,6 @@ class Query(BaseModel):
 
 app = FastAPI()
 
-# Load documents and initialize components
 documents = load_documents("data")
 store = VectorStore()
 store.add_documents(documents)

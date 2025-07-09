@@ -8,7 +8,6 @@ def load_documents(data_dir="data"):
         path = os.path.join(data_dir, fname)
         text = ""
 
-        # Handle DOCX files
         if fname.endswith(".docx"):
             print(f"📄 Reading DOCX: {fname}")
             try:
@@ -18,7 +17,6 @@ def load_documents(data_dir="data"):
                 print(f"❌ Error reading DOCX {fname}: {e}")
                 continue
 
-        # Handle PDF files
         elif fname.endswith(".pdf"):
             print(f"📕 Reading PDF: {fname}")
             try:
@@ -33,7 +31,6 @@ def load_documents(data_dir="data"):
                 print(f"❌ Error reading PDF {fname}: {e}")
                 continue
 
-        # Add document if text was successfully extracted
         if text:
             docs.append({
                 "filename": fname,
