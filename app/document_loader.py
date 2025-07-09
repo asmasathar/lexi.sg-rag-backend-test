@@ -1,20 +1,7 @@
 import os
 import re
-import nltk
-from nltk.tokenize import sent_tokenize
 from docx import Document
 from PyPDF2 import PdfReader
-
-# Force NLTK to use a known location (important for Render)
-NLTK_DATA_DIR = "/tmp/nltk_data"
-os.makedirs(NLTK_DATA_DIR, exist_ok=True)
-nltk.data.path.append(NLTK_DATA_DIR)
-
-# Download punkt if it's not already downloaded
-try:
-    nltk.data.find("tokenizers/punkt")
-except LookupError:
-    nltk.download("punkt", download_dir=NLTK_DATA_DIR)
 
 
 def clean_text(text):
@@ -24,9 +11,16 @@ def clean_text(text):
     return text.strip()
 
 
+def simple_sentence_tokenize(text):
+    """A basic sentence splitter using regex (without nltk)."""
+    # Split on '.', '?', '!' followed by space or end of string
+    sentences = re.split(r'(?<=[.!?])\s+', text)
+    return [s.strip() for s in sentences if s.strip()]
+
+
 def sentence_chunker(text, sentences_per_chunk=3):
     """Split text into chunks of full sentences."""
-    sentences = sent_tokenize(text)
+    sentences = simple_sentence_tokenize(text)
     chunks = []
     current_chunk = ""
     for i, sentence in enumerate(sentences):
