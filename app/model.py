@@ -1,8 +1,30 @@
-from transformers import pipeline
+import requests
+import os
 
-qa_pipeline = pipeline("text-generation", model="tiiuae/falcon-rw-1b")
+HUGGINGFACE_API_TOKEN = os.getenv("HUGGINGFACE_API_TOKEN")  # from Railway env vars
 
-def generate_answer(context, question):
-    prompt = f"Context: {context}\n\nQuestion: {question}\n\nAnswer:"
-    output = qa_pipeline(prompt, max_new_tokens=100)
-    return output[0]["generated_text"].split("Answer:")[-1].strip()
+def query_hf_model(prompt: str):
+    headers = {
+        "Authorization": f"Bearer {HUGGINGFACE_API_TOKEN}",
+        "Content-Type": "application/json"
+    }
+
+    payload = {
+        "inputs": prompt,
+        "parameters": {
+            "temperature": 0.7,
+            "max_new_tokens": 300
+        }
+    }
+
+    response = requests.post(
+        "https://api-inference.huggingface.co/models/tiiuae/falcon-rw-1b",
+        headers=headers,
+        json=payload
+    )
+
+    if response.status_code == 200:
+        return response.json()[0]["generated_text"]
+    else:
+        print("🚨 Hugging Face API Error:", response.text)
+        return "Sorry, something went wrong with the model."
