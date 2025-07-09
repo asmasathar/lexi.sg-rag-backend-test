@@ -11,7 +11,7 @@ class VectorStore:
 
     def add_documents(self, docs):
         for doc in docs:
-            chunks = [doc["text"][i:i+500] for i in range(0, len(doc["text"]), 500)]
+            chunks = [doc["text"][i:i+500] for i in range(0, len(doc["text"]),500)]
             embeddings = self.model.encode(chunks)
             self.index.add(np.array(embeddings).astype("float32"))
             self.texts.extend(chunks)

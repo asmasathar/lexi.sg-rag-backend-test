@@ -1,8 +1,8 @@
-fastapi
-uvicorn
 transformers
-torch
-faiss-cpu
 sentence-transformers
+faiss-cpu
+uvicorn
+fastapi
+numpy
 python-docx
 PyPDF2
