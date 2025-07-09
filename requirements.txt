@@ -1,6 +1,6 @@
 fastapi
 uvicorn
-docx
+python-docx      
 PyPDF2
 sentence-transformers
 faiss-cpu
