@@ -21,7 +21,11 @@ Question: {query}
 Answer:"""
 
     def clean_answer(self, text):
-        return re.sub(r'(\b.+?\b)(?: \1\b)+', r'\1', text).strip()
+        text = re.sub(r'(\b.+?\b)(?: \1\b)+', r'\1', text)
+        text = re.sub(r'[\n\r\t]+', ' ', text)
+        text = re.sub(r'\s{2,}', ' ', text)
+        text = re.sub(r'[*_`]+', '', text)
+        return text.strip()
 
     def run(self, query):
         top_docs = self.vectorstore.query(query)
@@ -37,8 +41,8 @@ Answer:"""
             temperature=0.5,
             max_tokens=1024,
             extra_headers={
-                "HTTP-Referer": "https://ragbackend.com",  # optional
-                "X-Title": "Legal RAG System"  # optional
+                "HTTP-Referer": "https://ragbackend.com",
+                "X-Title": "Legal RAG System"
             }
         )
 
