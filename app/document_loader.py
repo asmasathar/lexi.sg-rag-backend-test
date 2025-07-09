@@ -5,18 +5,19 @@ from nltk.tokenize import sent_tokenize
 from docx import Document
 from PyPDF2 import PdfReader
 
-nltk.download("punkt")
+try:
+    nltk.data.find("tokenizers/punkt")
+except LookupError:
+    nltk.download("punkt")
 
 
 def clean_text(text):
-    """Clean up special characters and excess whitespace."""
-    text = re.sub(r'\s+', ' ', text)  # collapse whitespace
-    text = text.replace('\u00a0', ' ')  # non-breaking space
+    text = re.sub(r'\s+', ' ', text)
+    text = text.replace('\u00a0', ' ')
     return text.strip()
 
 
 def sentence_chunker(text, sentences_per_chunk=3):
-    """Split text into chunks of full sentences."""
     sentences = sent_tokenize(text)
     chunks = []
     current_chunk = ""
@@ -31,7 +32,6 @@ def sentence_chunker(text, sentences_per_chunk=3):
 
 
 def extract_text_from_pdf(file_path):
-    """Extract raw text from a PDF file."""
     try:
         reader = PdfReader(file_path)
         return "\n".join([page.extract_text() or "" for page in reader.pages])
@@ -41,7 +41,6 @@ def extract_text_from_pdf(file_path):
 
 
 def extract_text_from_docx(file_path):
-    """Extract raw text from a DOCX file."""
     try:
         doc = Document(file_path)
         return "\n".join([para.text for para in doc.paragraphs])
@@ -51,7 +50,6 @@ def extract_text_from_docx(file_path):
 
 
 def load_documents(directory):
-    """Load, clean, chunk, and return documents from a folder."""
     documents = []
     for filename in os.listdir(directory):
         filepath = os.path.join(directory, filename)
